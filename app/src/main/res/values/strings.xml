@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MovieBAJP</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title">Title</string>
+    <string name="language">Language</string>
+    <string name="date">Date</string>
+    <string name="adult">Adult</string>
+    <string name="popularity">Popularity</string>
+    <string name="total">Total</string>
+    <string name="avarage">Avarage</string>
+    <string name="genre">Genre</string>
+    <string name="description">Description</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="movie">Movie</string>
+    <string name="tv">Tv</string>
+    <string name="welcome">Welcome</string>
+    <string name="share">Share</string>
+    <string name="share_title">Bagikan Aplikasi Ini Sekarang</string>
+    <string name="share_text" >Segara Lihat Film %s di apps ini</string>
+</resources>

@@ -1,6 +1,5 @@
 package com.aditya.moviebajp.data.source
 
-import androidx.lifecycle.LiveData
 import com.aditya.moviebajp.data.MovieEntity
 import com.aditya.moviebajp.data.TvEntity
 import com.aditya.moviebajp.data.source.remote.RemoteDataSource
@@ -18,7 +17,7 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
     }
 
     override suspend fun getAllMovie(): List<MovieEntity> {
-        return remoteDataSource.getAllMovie().map {
+        return remoteDataSource.getAllMovie().results.map {
             MovieEntity(
                 it.poster_path,
                 it.backdrop_path,
@@ -31,14 +30,13 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
                 it.popularity,
                 it.vote_count,
                 it.adult,
-                it.genre_name.map { String() },
                 it.vote_average
             )
         }
     }
 
     override suspend fun getAllTv(): List<TvEntity> {
-        return remoteDataSource.getAllTv().map {
+        return remoteDataSource.getAllTv().results.map {
             TvEntity(
                 it.poster_path,
                 it.backdrop_path,
@@ -50,9 +48,43 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
                 it.original_language,
                 it.popularity,
                 it.vote_count,
-                it.genre_name,
                 it.vote_average
             )
         }
+    }
+
+    override suspend fun getMovieById(id: String): MovieEntity {
+        val response = remoteDataSource.getMovieById(id)
+        return MovieEntity(
+            response.poster_path,
+            response.backdrop_path,
+            response.overview,
+            response.release_date,
+            response.id,
+            response.original_title,
+            response.title,
+            response.original_language,
+            response.popularity,
+            response.vote_count,
+            response.adult,
+            response.vote_average
+        )
+    }
+
+    override suspend fun getTvById(id: String): TvEntity {
+        val response = remoteDataSource.getTvById(id)
+        return TvEntity(
+            response.poster_path,
+            response.backdrop_path,
+            response.overview,
+            response.first_air_date,
+            response.id,
+            response.original_name,
+            response.name,
+            response.original_language,
+            response.popularity,
+            response.vote_count,
+            response.vote_average
+        )
     }
 }

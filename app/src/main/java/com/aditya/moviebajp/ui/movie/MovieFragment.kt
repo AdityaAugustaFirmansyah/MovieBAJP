@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aditya.moviebajp.R
+import com.aditya.moviebajp.data.ViewState
 import com.aditya.moviebajp.databinding.FragmentMovieBinding
+import com.aditya.moviebajp.network.ApiClient
+import com.aditya.moviebajp.viewmodel.ViewModelFactory
 
 class MovieFragment : Fragment() {
 
@@ -26,22 +30,41 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel = ViewModelProvider(
-            this
+            this, ViewModelFactory.getInstance(ApiClient.restApi())
         )[MovieViewModel::class.java]
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = MovieAdapter(
-                viewModel.getData()
-            )
-        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        if (viewModel.getData().isEmpty()){
-            binding.emptyMovie.visibility = View.VISIBLE
-            binding.recyclerView.visibility = View.GONE
-        }else{
-            binding.emptyMovie.visibility = View.GONE
-            binding.recyclerView.visibility = View.VISIBLE
+        viewModel.getData().observe(viewLifecycleOwner, {
+            if (it.viewState==ViewState.LOADING){
+                binding.progressBar.visibility = View.VISIBLE
+                showError(binding,View.GONE,"")
+                binding.recyclerView.visibility = View.GONE
+            }else if (it.viewState == ViewState.SUCCESS){
+                binding.progressBar.visibility = View.GONE
+                binding.recyclerView.apply {
+                    adapter = MovieAdapter(it.success)
+                }
+                if (it.success.isEmpty()) {
+                    binding.emptyMovie.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
+                    showError(binding,View.VISIBLE,getString(R.string.empty_list))
+                } else {
+                    binding.recyclerView.visibility = View.VISIBLE
+                    showError(binding,View.GONE,"")
+                }
+            }else if (it.viewState == ViewState.FAILURE){
+                binding.progressBar.visibility = View.GONE
+                binding.recyclerView.visibility = View.GONE
+                showError(binding,View.VISIBLE,it.msg)
+            }
+        })
+    }
+    companion object{
+        fun showError(binding: FragmentMovieBinding,visibility:Int,message:String){
+            binding.emptyMovie.visibility = visibility
+            binding.tvError.visibility = visibility
+            binding.tvError.text = message
         }
     }
 }

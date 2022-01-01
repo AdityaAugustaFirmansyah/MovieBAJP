@@ -1,6 +1,7 @@
 package com.aditya.moviebajp.data.source.remote
 
-import com.aditya.moviebajp.data.source.remote.response.GenreResponse
+import com.aditya.moviebajp.data.source.remote.response.DetailMovieResponse
+import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
 import com.aditya.moviebajp.data.source.remote.response.MovieResponse
 import com.aditya.moviebajp.data.source.remote.response.TvResponse
 import com.aditya.moviebajp.network.RestApi
@@ -14,11 +15,8 @@ class RemoteDataSource private constructor(private val restApi: RestApi) {
         }
     }
 
-    suspend fun getAllMovie():List<MovieResponse>{
-        return restApi.getAllMovie().apply {
-
-        }
-    }
-    suspend fun getAllTv():List<TvResponse> = restApi.getAllTv()
-    suspend fun getAllGenre():List<GenreResponse> = restApi.getGenreMovies()
+    suspend fun getAllMovie():MovieResponse = restApi.getAllMovie()
+    suspend fun getAllTv():TvResponse = restApi.getAllTv()
+    suspend fun getMovieById(id:String):DetailMovieResponse = restApi.getMovieById(id)
+    suspend fun getTvById(id:String):DetailTvResponse = restApi.getTvById(id)
 }

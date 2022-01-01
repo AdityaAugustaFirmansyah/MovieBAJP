@@ -1,10 +1,6 @@
 package com.aditya.moviebajp.data.source.remote.response
 
-data class MovieResponse(
-    val results:List<MovieData>,
-    val msg:String)
-
-data class MovieData(
+data class DetailMovieResponse(
     val poster_path:String,
     val backdrop_path:String,
     val overview:String,
@@ -16,5 +12,6 @@ data class MovieData(
     val popularity:Double,
     val vote_count:Int,
     val adult:Boolean,
-    val vote_average:Double
+    val vote_average:Double,
+    val genres:List<GenreResponse>
 )

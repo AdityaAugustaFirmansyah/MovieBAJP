@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object MovieDummy {
-    const val BASE_URL_IMAGE = "https://image.tmdb.org/t/p/original/"
     fun generateMovies():List<MovieEntity>{
         return Gson().fromJson(
             DATA_MOVIE,

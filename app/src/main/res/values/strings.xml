@@ -18,4 +18,5 @@
     <string name="share">Share</string>
     <string name="share_title">Bagikan Aplikasi Ini Sekarang</string>
     <string name="share_text" >Segara Lihat Film %s di apps ini</string>
+    <string name="empty_list">Empty List</string>
 </resources>

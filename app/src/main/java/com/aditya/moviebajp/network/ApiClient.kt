@@ -7,6 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
+
+    const val BASE_URL_IMAGE = "https://image.tmdb.org/t/p/original/"
+
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(Interceptor {
             var request = it.request()
@@ -22,4 +25,6 @@ object ApiClient {
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
+
+    fun restApi():RestApi = retrofit.create(RestApi::class.java)
 }

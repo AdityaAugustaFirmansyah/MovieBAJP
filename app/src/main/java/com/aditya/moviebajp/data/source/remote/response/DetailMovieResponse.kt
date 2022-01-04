@@ -13,5 +13,4 @@ data class DetailMovieResponse(
     val vote_count:Int,
     val adult:Boolean,
     val vote_average:Double,
-    val genres:List<GenreResponse>
 )

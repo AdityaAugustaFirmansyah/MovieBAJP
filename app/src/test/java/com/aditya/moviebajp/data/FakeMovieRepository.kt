@@ -1,27 +1,16 @@
-package com.aditya.moviebajp.data.source
+package com.aditya.moviebajp.data
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.aditya.moviebajp.data.*
+import com.aditya.moviebajp.data.source.MovieDataSource
 import com.aditya.moviebajp.data.source.remote.RemoteDataSource
 import com.aditya.moviebajp.data.source.remote.response.DetailMovieResponse
 import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
 import com.aditya.moviebajp.data.source.remote.response.MovieResponse
 import com.aditya.moviebajp.data.source.remote.response.TvResponse
 
-class MovieRepository private constructor(private val remoteDataSource: RemoteDataSource) :
+class FakeMovieRepository(private val remoteDataSource: RemoteDataSource) :
     MovieDataSource {
-    companion object {
-        @Volatile
-        private var instance: MovieRepository? = null
-
-        fun getInstance(remoteDataSource: RemoteDataSource): MovieRepository =
-            instance ?: synchronized(this) {
-                instance ?: MovieRepository(remoteDataSource)
-            }
-    }
-
-    override fun getAllMovie(): LiveData<MovieState> {
+    override fun getAllMovie(): MutableLiveData<MovieState> {
         val mutableLiveData = MutableLiveData<MovieState>()
         mutableLiveData.value = MovieState(ViewState.LOADING, mutableListOf(), "")
         remoteDataSource.getAllMovie(object : RemoteDataSource.LoadMovieCallback {
@@ -119,9 +108,9 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
     override fun getTvById(id: String): MutableLiveData<DetailTvState> {
         val mutableLiveData = MutableLiveData<DetailTvState>()
         mutableLiveData.value = DetailTvState(ViewState.LOADING, "", null)
-        remoteDataSource.getTvById(id, object : RemoteDataSource.LoadDetailTvCallback{
+        remoteDataSource.getTvById(id, object : RemoteDataSource.LoadDetailTvCallback {
             override fun onSuccess(detailTvResponse: DetailTvResponse) {
-                mutableLiveData.value = DetailTvState(ViewState.SUCCESS,"",detailTvResponse.let {
+                mutableLiveData.value = DetailTvState(ViewState.SUCCESS, "", detailTvResponse.let {
                     TvEntity(
                         it.poster_path,
                         it.backdrop_path,
@@ -139,7 +128,7 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
             }
 
             override fun onFailure(msg: String) {
-                mutableLiveData.value = DetailTvState(ViewState.FAILURE,msg,null)
+                mutableLiveData.value = DetailTvState(ViewState.FAILURE, msg, null)
             }
 
         })

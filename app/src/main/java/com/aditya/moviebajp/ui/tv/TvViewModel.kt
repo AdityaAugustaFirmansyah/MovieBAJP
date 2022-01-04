@@ -14,33 +14,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class TvViewModel(private val movieRepository: MovieRepository) :ViewModel() {
-    private val tvLiveData:MutableLiveData<TvState> = MutableLiveData()
-
-    init {
-        tvLiveData.value = TvState(mutableListOf(),"",ViewState.LOADING)
-        viewModelScope.launch {
-            try {
-                tvLiveData.value = TvState(movieRepository.getAllTv(),"",ViewState.SUCCESS)
-            }catch (e: HttpException){
-                tvLiveData.value = TvState( mutableListOf(),e.message(),ViewState.FAILURE)
-                e.printStackTrace()
-            }catch (e: IOException){
-                tvLiveData.value =
-                    e.message?.let { TvState( mutableListOf(), it,ViewState.FAILURE) }
-                e.printStackTrace()
-            }catch (e:Exception){
-                tvLiveData.value =
-                    e.message?.let { TvState(mutableListOf(), it,ViewState.FAILURE) }
-                e.printStackTrace()
-            }
-        }
-    }
-
     fun getData():LiveData<TvState>{
-        return tvLiveData
-    }
-
-    fun getData(index:Int):TvEntity{
-        return MovieDummy.getDetailTv(index)
+        return movieRepository.getAllTv()
     }
 }

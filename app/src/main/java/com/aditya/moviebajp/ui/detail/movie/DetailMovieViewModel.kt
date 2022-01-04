@@ -13,24 +13,9 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class DetailMovieViewModel(private val id:Int, private val movieRepository: MovieRepository):ViewModel() {
-    private val detailMovieLiveData:MutableLiveData<DetailMovieState> = MutableLiveData()
-    init {
-        detailMovieLiveData.value = DetailMovieState(ViewState.LOADING,"",null)
-        viewModelScope.launch {
-            try {
-                detailMovieLiveData.value = DetailMovieState(ViewState.SUCCESS,"",movieRepository.getMovieById(id.toString()))
-            }catch (e:HttpException){
-                detailMovieLiveData.value = DetailMovieState(ViewState.FAILURE,"${e.message} ${e.code()}", null)
-            }catch (e:IOException){
-                detailMovieLiveData.value = DetailMovieState(ViewState.FAILURE,"${e.message}", null)
-            }catch (e:Exception){
-                detailMovieLiveData.value = DetailMovieState(ViewState.FAILURE,"${e.message}", null)
-            }
-        }
-    }
+class DetailMovieViewModel(private val id:Int,private val movieRepository: MovieRepository):ViewModel() {
 
     fun detailMovieLiveData():LiveData<DetailMovieState>{
-        return detailMovieLiveData
+        return movieRepository.getMovieById(id.toString())
     }
 }

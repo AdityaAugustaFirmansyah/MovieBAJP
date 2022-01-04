@@ -11,6 +11,5 @@ data class DetailTvResponse(
     val original_language:String,
     val popularity:Double,
     val vote_count:Int,
-    val genres:List<GenreResponse>,
     val vote_average:Double
 )

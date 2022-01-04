@@ -1,11 +1,12 @@
 package com.aditya.moviebajp.data.source
 
-import com.aditya.moviebajp.data.MovieEntity
-import com.aditya.moviebajp.data.TvEntity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.aditya.moviebajp.data.*
 
 interface MovieDataSource {
-    suspend fun getAllMovie():List<MovieEntity>
-    suspend fun getAllTv():List<TvEntity>
-    suspend fun getMovieById(id:String):MovieEntity
-    suspend fun getTvById(id:String):TvEntity
+    fun getAllMovie():LiveData<MovieState>
+    fun getAllTv():MutableLiveData<TvState>
+    fun getMovieById(id:String):MutableLiveData<DetailMovieState>
+    fun getTvById(id:String):MutableLiveData<DetailTvState>
 }

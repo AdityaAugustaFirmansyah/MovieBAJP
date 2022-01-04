@@ -1,12 +1,28 @@
 package com.aditya.moviebajp.ui.tv
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.aditya.moviebajp.data.FakeMovieRepository
 import com.aditya.moviebajp.data.TvEntity
+import com.aditya.moviebajp.data.TvState
+import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.data.source.MovieRepository
+import com.aditya.moviebajp.data.source.remote.RemoteDataSource
+import com.aditya.moviebajp.utils.MovieDummy
 import com.google.gson.Gson
+import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.junit.MockitoJUnitRunner
 
 /*
 skenario test pada TvViewModelTest
@@ -25,65 +41,42 @@ skenario test pada TvViewModelTest
     memastikan throw exception IndexOutOfBoundsException dengan mengakses indeks ke -1
 */
 
+@RunWith(MockitoJUnitRunner::class)
 class TvViewModelTest {
     private lateinit var viewModelTest: TvViewModel
-    private val rawTv = "{\n" +
-            "    \"poster_path\": \"/aUPbHiLS3hCHKjtLsncFa9g0viV.jpg\",\n" +
-            "    \"popularity\": 47.432451,\n" +
-            "    \"id\": 31917,\n" +
-            "    \"backdrop_path\": \"/ypLoTftyF5EpGBxJas4PThIdiU4.jpg\",\n" +
-            "    \"vote_average\": 5.04,\n" +
-            "    \"overview\": \"Based on the Pretty Little Liars series of young adult novels by Sara Shepard, the series follows the lives of four girls — Spencer, Hanna, Aria, and Emily — whose clique falls apart after the disappearance of their queen bee, Alison. One year later, they begin receiving messages from someone using the name \\\"A\\\" who threatens to expose their secrets — including long-hidden ones they thought only Alison knew.\",\n" +
-            "    \"first_air_date\": \"2010-06-08\",\n" +
-            "    \"origin_country\": [\n" +
-            "      \"US\"\n" +
-            "    ],\n" +
-            "    \"genre_ids\": [\n" +
-            "      18,\n" +
-            "      9648\n" +
-            "    ],\n" +
-            "    \"genre_name\": [\n" +
-            "      \"Drama\",\n" +
-            "      \"Mystery\"\n" +
-            "    ],\n" +
-            "    \"original_language\": \"en\",\n" +
-            "    \"vote_count\": 133,\n" +
-            "    \"name\": \"Pretty Little Liars\",\n" +
-            "    \"original_name\": \"Pretty Little Liars\"\n" +
-            "  }"
+
+    @Mock
+    private lateinit var repository: MovieRepository
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Mock
+    private lateinit var observer: Observer<TvState>
 
     @Before
     fun setUp(){
-        viewModelTest= TvViewModel()
+        viewModelTest= TvViewModel(repository)
     }
 
     @Test
     fun testLoadTv() {
-        assertNotNull(viewModelTest.getData())
-        assertEquals(10, viewModelTest.getData().size)
-    }
-
-    @Test
-    fun testDetailTv(){
-        val tvs = viewModelTest.getData(0)
-        val tv = Gson().fromJson(rawTv,TvEntity::class.java)
-        assertEquals(tv.id, tvs.id)
-        assertEquals(tv.name, tvs.name)
-        assertEquals(tv.poster_path, tvs.poster_path)
-        assertEquals(tv.popularity, tvs.popularity)
-        assertEquals(tv.backdrop_path, tvs.backdrop_path)
-        assertEquals(tv.vote_average, tvs.vote_average)
-        assertEquals(tv.overview, tvs.overview)
-        assertEquals(tv.first_air_date, tvs.first_air_date)
-        assertEquals(tv.original_language, tvs.original_language)
-        assertEquals(tv.vote_count, tvs.vote_count)
-        assertEquals(tv.original_name, tvs.original_name)
+        val dummyTv = TvState(MovieDummy.generateTv(),"",ViewState.SUCCESS)
+        val tv = MutableLiveData<TvState>()
+        tv.value = dummyTv
+        `when`(repository.getAllTv()).thenReturn(tv)
+        val tvEntity = viewModelTest.getData().value
+        verify(repository).getAllTv()
+        assertNotNull(tvEntity)
+        assertEquals(dummyTv.tvs.size.toLong(),tvEntity?.tvs?.size?.toLong())
+        viewModelTest.getData().observeForever(observer)
+        verify(observer).onChanged(dummyTv)
     }
 
     @Test
     fun testIndexOutOfBound(){
-        Assert.assertThrows(IndexOutOfBoundsException::class.java) {
-            viewModelTest.getData(-1)
-        }
+//        Assert.assertThrows(IndexOutOfBoundsException::class.java) {
+//            viewModelTest.getData(-1)
+//        }
     }
 }

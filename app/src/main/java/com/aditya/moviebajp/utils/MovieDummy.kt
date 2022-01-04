@@ -1,29 +1,114 @@
 package com.aditya.moviebajp.utils
 
 import com.aditya.moviebajp.data.MovieEntity
+import com.aditya.moviebajp.data.MovieState
 import com.aditya.moviebajp.data.TvEntity
+import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.data.source.remote.response.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object MovieDummy {
-    fun generateMovies():List<MovieEntity>{
+    fun generateMovies(): List<MovieEntity> {
         return Gson().fromJson(
             DATA_MOVIE,
-            object : TypeToken<List<MovieEntity>>(){}.type)
+            object : TypeToken<List<MovieEntity>>() {}.type
+        )
     }
 
-    fun generateTv():List<TvEntity>{
+    fun generateTv(): List<TvEntity> {
         return Gson().fromJson(
             DATA_TV,
-            object : TypeToken<List<TvEntity>>(){}.type)
+            object : TypeToken<List<TvEntity>>() {}.type
+        )
     }
 
-    fun getDetailMovie(index:Int):MovieEntity{
+    fun getDetailMovie(index: Int): MovieEntity {
         return generateMovies()[index]
     }
 
-    fun getDetailTv(index:Int):TvEntity{
+    fun getDetailTv(index: Int): TvEntity {
         return generateTv()[index]
+    }
+
+    fun generateMoviesResponse(): MovieResponse {
+        val results = mutableListOf<MovieData>()
+        results.addAll(generateMovies().map {
+            MovieData(
+                it.poster_path,
+                it.backdrop_path,
+                it.overview,
+                it.release_date,
+                it.id,
+                it.original_title,
+                it.title,
+                it.original_language,
+                it.popularity,
+                it.vote_count,
+                it.adult,
+                it.vote_average
+            )
+        })
+        return MovieResponse(results, "")
+    }
+
+    fun generateTvResponse(): TvResponse {
+        val results = mutableListOf<DataTv>()
+        results.addAll(generateTv().map {
+            DataTv(
+                it.poster_path,
+                it.backdrop_path,
+                it.overview,
+                it.first_air_date,
+                it.id,
+                it.original_name,
+                it.name,
+                it.original_language,
+                it.popularity,
+                it.vote_count,
+                it.vote_average
+            )
+        })
+        return TvResponse(results, "")
+    }
+
+    fun generateDetailTvResponse(): DetailTvResponse {
+        val tv = generateTv()[0]
+        return DetailTvResponse(
+            tv.poster_path,
+            tv.backdrop_path,
+            tv.overview,
+            tv.first_air_date,
+            tv.id,
+            tv.original_name,
+            tv.name,
+            tv.original_language,
+            tv.popularity,
+            tv.vote_count,
+            tv.vote_average
+        )
+    }
+
+    fun generateDetailMovieResponse(): DetailMovieResponse {
+        val movie = generateMovies()[0]
+        return DetailMovieResponse(
+            movie.poster_path,
+            movie.backdrop_path,
+            movie.overview,
+            movie.release_date,
+            movie.id,
+            movie.original_title,
+            movie.title,
+            movie.original_language,
+            movie.popularity,
+            movie.vote_count,
+            movie.adult,
+            movie.vote_average
+        )
+    }
+
+    fun generateMoviesState(): MovieState {
+        return MovieState(ViewState.SUCCESS, generateMovies(),"")
     }
 
     private const val DATA_MOVIE = "[{\n" +

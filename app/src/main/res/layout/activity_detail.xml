@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.detail.movie.DetailMovieActivity"
-    android:fitsSystemWindows="true">
+    tools:context=".ui.detail.movie.DetailMovieActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:id="@+id/appbar"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -51,7 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/content"
-        tools:visibility="gone"
+        tools:visibility="visible"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,12 +75,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/title"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/guideline3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/poster_detail"
                 app:layout_constraintTop_toTopOf="@+id/poster_detail" />
 
@@ -208,12 +208,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_total_detail"
                 app:layout_constraintTop_toTopOf="@+id/tv_total_detail"
                 tools:text="TextView" />
@@ -265,29 +265,24 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView4"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/poster_detail"
-                app:layout_constraintTop_toBottomOf="@+id/tv_popularity_detail" />
+                app:layout_constraintStart_toStartOf="@+id/textView10"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/tv_description_detail"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/textView18"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/textView18"
                 app:layout_constraintTop_toBottomOf="@+id/textView18"
+                app:layout_constraintVertical_bias="1.0"
                 tools:text="TextView" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -303,6 +298,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:id="@+id/content_empty"
+        tools:visibility="gone"
         android:orientation="vertical">
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/empty_movie"

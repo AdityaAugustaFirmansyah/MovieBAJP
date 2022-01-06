@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.actionWithAssertions
@@ -18,6 +19,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.aditya.moviebajp.NestedScrollToAction
 import com.aditya.moviebajp.R
+import com.aditya.moviebajp.utils.EspressoIdlingResource
 import com.aditya.moviebajp.utils.MovieDummy
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.not
@@ -108,6 +110,7 @@ class HomeActivityTest {
     @Before
     fun launchActivity() {
         ActivityScenario.launch(HomeActivity::class.java)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.idling)
     }
 
     @Test
@@ -129,31 +132,23 @@ class HomeActivityTest {
             )
         )
         onView(withId(R.id.tv_title_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_title_detail)).check(matches(withText("Suicide Squad")))
         onView(withId(R.id.poster_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.backdrop)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_language_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_language_detail)).check(matches(withText("en")))
         onView(withId(R.id.tv_date_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_date_detail)).check(matches(withText("2016-08-03")))
         onView(withId(R.id.tv_adult_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_adult_detail)).check(matches(withText("no")))
         onView(withId(R.id.tv_popularity_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_popularity_detail)).check(matches(withText("48.261451")))
         onView(withId(R.id.tv_total_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_total_detail)).check(matches(withText("1466")))
         onView(withId(R.id.tv_avarage_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_avarage_detail)).check(matches(withText("5.91")))
         onView(withId(R.id.textView18)).perform(betterScrollTo())
         onView(withId(R.id.tv_description_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_description_detail)).check(matches(withText("From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.")))
     }
 
     @Test
     fun loadDataTv() {
         onView(withText(resources.getString(R.string.tv))).perform(click())
-        onView(withId(R.id.rvTv)).check(matches(isDisplayed()))
-        onView(withId(R.id.rvTv)).perform(
+        onView(withId(R.id.recyclerView)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
                 dummyTv.size
             )
@@ -171,39 +166,32 @@ class HomeActivityTest {
     @Test
     fun emptyDataTv() {
         onView(withText(resources.getString(R.string.tv))).perform(click())
-        onView(withId(R.id.empty_tv)).perform(setVisibility(VISIBLE))
-        onView(withId(R.id.rvTv)).perform(setVisibility(GONE))
-        onView(withId(R.id.empty_tv)).check(matches(isDisplayed()))
-        onView(withId(R.id.rvTv)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.empty_movie)).perform(setVisibility(VISIBLE))
+        onView(withId(R.id.recyclerView)).perform(setVisibility(GONE))
+        onView(withId(R.id.empty_movie)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).check(matches(not(isDisplayed())))
     }
 
     @Test
     fun loadDetailTv() {
         onView(withText(resources.getString(R.string.tv))).perform(click())
-        onView(withId(R.id.rvTv)).check(matches(isDisplayed()))
-        onView(withId(R.id.rvTv)).perform(
+        onView(withId(R.id.recyclerView)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0, click()
             )
         )
 
         onView(withId(R.id.tv_title_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_title_detail)).check(matches(withText("Pretty Little Liars")))
         onView(withId(R.id.poster_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.backdrop)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_language_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_language_detail)).check(matches(withText("en")))
         onView(withId(R.id.tv_date_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_date_detail)).check(matches(withText("2010-06-08")))
         onView(withId(R.id.tv_popularity_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_popularity_detail)).check(matches(withText("47.432451")))
         onView(withId(R.id.tv_total_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_total_detail)).check(matches(withText("133")))
         onView(withId(R.id.tv_avarage_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_avarage_detail)).check(matches(withText("5.04")))
         onView(withId(R.id.textView18)).perform(betterScrollTo())
         onView(withId(R.id.tv_description_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_description_detail)).check(matches(withText("Based on the Pretty Little Liars series of young adult novels by Sara Shepard, the series follows the lives of four girls — Spencer, Hanna, Aria, and Emily — whose clique falls apart after the disappearance of their queen bee, Alison. One year later, they begin receiving messages from someone using the name \"A\" who threatens to expose their secrets — including long-hidden ones they thought only Alison knew.")))
     }
 
     private fun betterScrollTo(): ViewAction {

@@ -68,16 +68,15 @@ class DetailTvActivity : AppCompatActivity() {
                             toolbar.title = it.name
                         }
                     }
-                    binding.progressBarDetail.visibility = View.GONE
                     binding.content.visibility = View.VISIBLE
                     binding.appbar.visibility = View.VISIBLE
-                    showError(binding,View.GONE,"")
+                    binding.progressBarDetail.visibility = View.GONE
+                    showError(binding,View.GONE,it.message)
                 }
                 ViewState.FAILURE -> {
-                    binding.progressBarDetail.visibility = View.GONE
-
                     binding.content.visibility = View.INVISIBLE
                     binding.appbar.visibility = View.INVISIBLE
+                    binding.progressBarDetail.visibility = View.GONE
                     showError(binding,View.VISIBLE,it.message)
                 }
                 ViewState.LOADING -> {

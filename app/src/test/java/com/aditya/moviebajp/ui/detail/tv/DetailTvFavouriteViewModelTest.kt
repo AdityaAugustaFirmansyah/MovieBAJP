@@ -4,11 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.aditya.moviebajp.data.DetailTvState
-import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.vo.Status
 import com.aditya.moviebajp.data.source.MovieRepository
 import com.aditya.moviebajp.utils.MovieDummy
 import com.nhaarman.mockitokotlin2.verify
-import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import org.junit.Before
@@ -19,9 +18,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
-
 @RunWith(MockitoJUnitRunner::class)
-class DetailTvViewModelTest{
+class DetailTvFavouriteViewModelTest{
     private lateinit var viewModel:DetailTvViewModel
     @Mock
     private lateinit var repository:MovieRepository
@@ -32,7 +30,7 @@ class DetailTvViewModelTest{
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val tvId = MovieDummy.generateTv()[0].id
-    private val dummyDetail = DetailTvState(ViewState.SUCCESS,"",MovieDummy.getDetailTv(0))
+    private val dummyDetail = DetailTvState(Status.SUCCESS,"",MovieDummy.getDetailTv())
 
     @Before
     fun setUp(){
@@ -48,7 +46,7 @@ class DetailTvViewModelTest{
         verify(repository).getTvById(tvId.toString())
         assertNotNull(detailEntity)
         assertEquals(dummyDetail.message, detailEntity?.message)
-        assertEquals(dummyDetail.viewState, detailEntity?.viewState)
+        assertEquals(dummyDetail.status, detailEntity?.status)
         assertEquals(dummyDetail.response, detailEntity?.response)
 
         viewModel.detailTvLiveData().observeForever(observer)

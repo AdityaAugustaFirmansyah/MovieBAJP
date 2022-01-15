@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.aditya.moviebajp.data.DetailMovieState
-import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.vo.Status
 import com.aditya.moviebajp.data.source.MovieRepository
 import com.aditya.moviebajp.utils.MovieDummy
 import com.nhaarman.mockitokotlin2.verify
@@ -17,9 +17,8 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
-
 @RunWith(MockitoJUnitRunner::class)
-class DetailMovieViewModelTest{
+class DetailMovieFavouriteViewModelTest{
     private lateinit var viewModel: DetailMovieViewModel
     @Mock
     private lateinit var repository: MovieRepository
@@ -29,8 +28,8 @@ class DetailMovieViewModelTest{
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val id = MovieDummy.getDetailMovie(0).id
-    private val dummyDetail = DetailMovieState(ViewState.SUCCESS,"", MovieDummy.getDetailMovie(0))
+    private val id = MovieDummy.getDetailMovie().id
+    private val dummyDetail = DetailMovieState(Status.SUCCESS,"", MovieDummy.getDetailMovie())
 
     @Before
     fun setUp(){
@@ -46,7 +45,7 @@ class DetailMovieViewModelTest{
         verify(repository).getMovieById(id.toString())
         TestCase.assertNotNull(detailEntity)
         TestCase.assertEquals(dummyDetail.message, detailEntity?.message)
-        TestCase.assertEquals(dummyDetail.viewState, detailEntity?.viewState)
+        TestCase.assertEquals(dummyDetail.status, detailEntity?.status)
         TestCase.assertEquals(dummyDetail.response, detailEntity?.response)
 
         viewModel.detailMovieLiveData().observeForever(observer)

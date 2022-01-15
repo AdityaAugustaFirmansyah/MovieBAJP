@@ -1,6 +1,11 @@
 package com.aditya.moviebajp.data.source.remote
 
-import com.aditya.moviebajp.data.source.remote.response.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.aditya.moviebajp.data.source.remote.response.DetailMovieResponse
+import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
+import com.aditya.moviebajp.data.source.remote.response.MovieResponse
+import com.aditya.moviebajp.data.source.remote.response.TvResponse
 import com.aditya.moviebajp.network.ApiClient
 import com.aditya.moviebajp.network.RestApi
 import com.aditya.moviebajp.utils.EspressoIdlingResource
@@ -17,90 +22,99 @@ class RemoteDataSource private constructor(private val restApi: RestApi) {
         }
     }
 
-    fun getAllMovie(callback: LoadMovieCallback){
+    fun getAllMovie():LiveData<ApiResponse<MovieResponse>>{
         EspressoIdlingResource.increment()
+        val result = MutableLiveData<ApiResponse<MovieResponse>>()
         ApiClient.restApi().getAllMovie().enqueue(object : Callback<MovieResponse>{
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful){
-                    response.body()?.let { callback.onSuccess(it) }
+                    response.body()?.let { result.value = ApiResponse.success(it) }
                     EspressoIdlingResource.decrement()
                 }else{
-                    callback.onFailure("${response.code()}")
+                    result.value= ApiResponse.error(response.code().toString(),null)
                     EspressoIdlingResource.decrement()
                 }
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                callback.onFailure("${t.message}")
+                result.value= t.message?.let { ApiResponse.error(it,null) }
                 EspressoIdlingResource.decrement()
             }
 
         })
+        return result
     }
-    fun getAllTv(callback:LoadTvCallback){
+    fun getAllTv():LiveData<ApiResponse<TvResponse>>{
         EspressoIdlingResource.increment()
+        val result = MutableLiveData<ApiResponse<TvResponse>>()
         restApi.getAllTv().enqueue(object : Callback<TvResponse>{
             override fun onResponse(call: Call<TvResponse>, response: Response<TvResponse>) {
                 if (response.isSuccessful){
-                    response.body()?.let { callback.onSuccess(it) }
+                    response.body()?.let { result.value = ApiResponse.success(it) }
                     EspressoIdlingResource.decrement()
                 }else{
-                    callback.onFailure("${response.code()}")
+                    result.value = ApiResponse.error(response.message(),null)
                     EspressoIdlingResource.decrement()
                 }
             }
 
             override fun onFailure(call: Call<TvResponse>, t: Throwable) {
-                callback.onFailure("${t.message}")
+                result.value = t.message?.let { ApiResponse.error(it,null) }
                 EspressoIdlingResource.decrement()
             }
 
         })
+        return result
     }
-    fun getMovieById(id: String, callback: LoadDetailMovieCallback){
+    fun getMovieById(id: String):LiveData<ApiResponse<DetailMovieResponse>>{
         EspressoIdlingResource.increment()
+        val result = MutableLiveData<ApiResponse<DetailMovieResponse>>()
         restApi.getMovieById(id).enqueue(object : Callback<DetailMovieResponse>{
             override fun onResponse(
                 call: Call<DetailMovieResponse>,
                 response: Response<DetailMovieResponse>
             ) {
                 if (response.isSuccessful){
-                    response.body()?.let { callback.onSuccess(it) }
+                    response.body()?.let { result.value = ApiResponse.success(it) }
                     EspressoIdlingResource.decrement()
                 }else{
-                    callback.onFailure("${response.code()}")
+                    result.value = ApiResponse.error(response.message(),null)
                     EspressoIdlingResource.decrement()
                 }
             }
 
             override fun onFailure(call: Call<DetailMovieResponse>, t: Throwable) {
                 EspressoIdlingResource.decrement()
-                callback.onFailure("${t.message}")
+                result.value = t.message?.let { ApiResponse.error(it,null) }
             }
 
         })
+        return result
     }
-    fun getTvById(id: String, callback: LoadDetailTvCallback){
+
+    fun getTvById(id: String):LiveData<ApiResponse<DetailTvResponse>>{
         EspressoIdlingResource.increment()
+        val result = MutableLiveData<ApiResponse<DetailTvResponse>>()
         restApi.getTvById(id).enqueue(object : Callback<DetailTvResponse>{
             override fun onResponse(
                 call: Call<DetailTvResponse>,
                 response: Response<DetailTvResponse>
             ) {
                 if (response.isSuccessful){
-                    response.body()?.let { callback.onSuccess(it) }
+                    response.body()?.let { result.value = ApiResponse.success(it) }
                     EspressoIdlingResource.decrement()
                 }else{
-                    callback.onFailure("${response.code()}")
+                    result.value = ApiResponse.error(response.message(),null)
                 }
             }
 
             override fun onFailure(call: Call<DetailTvResponse>, t: Throwable) {
-                callback.onFailure("${t.message}")
+                result.value = ApiResponse.error("${t.message}",null)
                 EspressoIdlingResource.decrement()
             }
 
         })
+        return result
     }
 
     interface LoadMovieCallback{

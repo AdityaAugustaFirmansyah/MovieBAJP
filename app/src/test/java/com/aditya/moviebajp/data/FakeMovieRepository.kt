@@ -7,36 +7,38 @@ import com.aditya.moviebajp.data.source.remote.response.DetailMovieResponse
 import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
 import com.aditya.moviebajp.data.source.remote.response.MovieResponse
 import com.aditya.moviebajp.data.source.remote.response.TvResponse
+import com.aditya.moviebajp.vo.Status
 
 class FakeMovieRepository(private val remoteDataSource: RemoteDataSource) :
     MovieDataSource {
     override fun getAllMovie(): MutableLiveData<MovieState> {
         val mutableLiveData = MutableLiveData<MovieState>()
-        mutableLiveData.value = MovieState(ViewState.LOADING, mutableListOf(), "")
+        mutableLiveData.value = MovieState(Status.LOADING, mutableListOf(), "")
         remoteDataSource.getAllMovie(object : RemoteDataSource.LoadMovieCallback {
             override fun onSuccess(movieResponse: MovieResponse) {
-                mutableLiveData.value = MovieState(ViewState.SUCCESS,
+                mutableLiveData.value = MovieState(
+                    Status.SUCCESS,
                     movieResponse.results.map {
                         MovieEntity(
-                            it.poster_path,
-                            it.backdrop_path,
+                            it.posterPath,
+                            it.backdropPath,
                             it.overview,
-                            it.release_date,
+                            it.releaseDate,
                             it.id,
-                            it.original_title,
+                            it.originalTitle,
                             it.title,
-                            it.original_language,
+                            it.originalLanguage,
                             it.popularity,
-                            it.vote_count,
+                            it.voteCount,
                             it.adult,
-                            it.vote_average
+                            it.voteAverage
                         )
                     }, ""
                 )
             }
 
             override fun onFailure(msg:String) {
-                mutableLiveData.value = MovieState(ViewState.FAILURE, mutableListOf(), msg)
+                mutableLiveData.value = MovieState(Status.FAILURE, mutableListOf(), msg)
             }
         })
         return mutableLiveData
@@ -44,28 +46,28 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource) :
 
     override fun getAllTv(): MutableLiveData<TvState> {
         val mutableLiveData = MutableLiveData<TvState>()
-        mutableLiveData.value = TvState(mutableListOf(), "", ViewState.LOADING)
+        mutableLiveData.value = TvState(mutableListOf(), "", Status.LOADING)
         remoteDataSource.getAllTv(object : RemoteDataSource.LoadTvCallback{
             override fun onSuccess(tvResponse: TvResponse) {
                 mutableLiveData.value = tvResponse.results.map {
                     TvEntity(
-                        it.poster_path,
-                        it.backdrop_path,
+                        it.posterPath,
+                        it.backdropPath,
                         it.overview,
-                        it.first_air_date,
+                        it.firstAirDate,
                         it.id,
-                        it.original_name,
+                        it.originalName,
                         it.name,
-                        it.original_language,
+                        it.originalLanguage,
                         it.popularity,
-                        it.vote_count,
-                        it.vote_average
+                        it.voteCount,
+                        it.voteAverage
                     )
-                }.let { TvState(it, "", ViewState.SUCCESS) }
+                }.let { TvState(it, "", Status.SUCCESS) }
             }
 
             override fun onFailure(msg: String) {
-                mutableLiveData.value = TvState(mutableListOf(), msg,ViewState.FAILURE)
+                mutableLiveData.value = TvState(mutableListOf(), msg, Status.FAILURE)
             }
 
         })
@@ -74,31 +76,31 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource) :
 
     override fun getMovieById(id: String): MutableLiveData<DetailMovieState> {
         val mutableLiveData = MutableLiveData<DetailMovieState>()
-        mutableLiveData.value = DetailMovieState(ViewState.LOADING, "", null)
+        mutableLiveData.value = DetailMovieState(Status.LOADING, "", null)
         remoteDataSource.getMovieById(id, object : RemoteDataSource.LoadDetailMovieCallback{
             override fun onSuccess(detailMovieResponse: DetailMovieResponse) {
                 detailMovieResponse.let {
                     mutableLiveData.value = DetailMovieState(
-                        ViewState.SUCCESS, "", MovieEntity(
-                            it.poster_path,
-                            it.backdrop_path,
+                        Status.SUCCESS, "", MovieEntity(
+                            it.posterPath,
+                            it.backdropPath,
                             it.overview,
-                            it.release_date,
+                            it.releaseDate,
                             it.id,
-                            it.original_title,
+                            it.originalTitle,
                             it.title,
-                            it.original_language,
+                            it.originalLanguage,
                             it.popularity,
-                            it.vote_count,
+                            it.voteCount,
                             it.adult,
-                            it.vote_average
+                            it.voteAverage
                         )
                     )
                 }
             }
 
             override fun onFailure(msg: String) {
-                mutableLiveData.value = DetailMovieState(ViewState.FAILURE,msg,null)
+                mutableLiveData.value = DetailMovieState(Status.FAILURE,msg,null)
             }
 
         })
@@ -107,28 +109,28 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource) :
 
     override fun getTvById(id: String): MutableLiveData<DetailTvState> {
         val mutableLiveData = MutableLiveData<DetailTvState>()
-        mutableLiveData.value = DetailTvState(ViewState.LOADING, "", null)
+        mutableLiveData.value = DetailTvState(Status.LOADING, "", null)
         remoteDataSource.getTvById(id, object : RemoteDataSource.LoadDetailTvCallback {
             override fun onSuccess(detailTvResponse: DetailTvResponse) {
-                mutableLiveData.value = DetailTvState(ViewState.SUCCESS, "", detailTvResponse.let {
+                mutableLiveData.value = DetailTvState(Status.SUCCESS, "", detailTvResponse.let {
                     TvEntity(
-                        it.poster_path,
-                        it.backdrop_path,
+                        it.posterPath,
+                        it.backdropPath,
                         it.overview,
-                        it.first_air_date,
+                        it.firstAirDate,
                         it.id,
-                        it.original_name,
+                        it.originalName,
                         it.name,
-                        it.original_language,
+                        it.originalLanguage,
                         it.popularity,
-                        it.vote_count,
-                        it.vote_average
+                        it.voteCount,
+                        it.voteAverage
                     )
                 })
             }
 
             override fun onFailure(msg: String) {
-                mutableLiveData.value = DetailTvState(ViewState.FAILURE, msg, null)
+                mutableLiveData.value = DetailTvState(Status.FAILURE, msg, null)
             }
 
         })

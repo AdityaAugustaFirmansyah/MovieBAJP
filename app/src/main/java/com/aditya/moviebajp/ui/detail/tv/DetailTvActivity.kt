@@ -4,26 +4,29 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModelProvider
 import com.aditya.moviebajp.R
-import com.aditya.moviebajp.data.TvEntity
-import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.data.source.local.entity.TvEntity
 import com.aditya.moviebajp.databinding.ActivityDetailBinding
 import com.aditya.moviebajp.network.ApiClient
 import com.aditya.moviebajp.viewmodel.DetailViewModelFactory
+import com.aditya.moviebajp.vo.Status
 import com.bumptech.glide.Glide
 
 class DetailTvActivity : AppCompatActivity() {
+    private var isFavourite: Boolean = false
+    private var menu: Menu? = null
+    private lateinit var viewModel: DetailTvViewModel
     private lateinit var binding: ActivityDetailBinding
     private lateinit var tvEntity: TvEntity
 
     companion object {
         const val TAG: String = "tag-detail-tv"
 
-        fun showError(binding: ActivityDetailBinding,visibility:Int,message:String){
+        fun showError(binding: ActivityDetailBinding, visibility: Int, message: String) {
             binding.contentEmpty.visibility = visibility
             binding.tvError.visibility = visibility
             binding.tvError.text = message
@@ -37,53 +40,66 @@ class DetailTvActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        val viewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
-            DetailViewModelFactory(intent.getIntExtra(TAG, 0),
-                ApiClient.restApi())
+            DetailViewModelFactory(
+                intent.getIntExtra(TAG, 0),
+                this
+            )
         )[DetailTvViewModel::class.java]
 
-        viewModel.detailTvLiveData().observe(this,{ it ->
-            when (it.viewState) {
-                ViewState.SUCCESS -> {
-                    it.response?.let {
+        viewModel.detailTvLiveData().observe(this, { it ->
+            when (it.status) {
+                Status.SUCCESS -> {
+                    it.data?.let {
                         tvEntity = it
                         binding.apply {
                             textView7.visibility = View.GONE
                             Glide.with(this@DetailTvActivity)
-                                .load(ApiClient.BASE_URL_IMAGE + it.poster_path)
+                                .load(ApiClient.BASE_URL_IMAGE + it.posterPath)
                                 .error(R.drawable.ic_broken_image_black).into(posterDetail)
 
                             Glide.with(this@DetailTvActivity)
-                                .load(ApiClient.BASE_URL_IMAGE + it.backdrop_path)
+                                .load(ApiClient.BASE_URL_IMAGE + it.backdropPath)
                                 .error(R.drawable.ic_broken_image_black).into(backdrop)
 
                             tvTitleDetail.text = it.name
-                            tvLanguageDetail.text = it.original_language
-                            tvDateDetail.text = it.first_air_date
+                            tvLanguageDetail.text = it.originalLanguage
+                            tvDateDetail.text = it.firstAirDate
                             tvPopularityDetail.text = it.popularity.toString()
-                            tvTotalDetail.text = it.vote_count.toString()
-                            tvAvarageDetail.text = it.vote_average.toString()
+                            tvTotalDetail.text = it.voteCount.toString()
+                            tvAverageDetail.text = it.voteAverage.toString()
                             tvDescriptionDetail.text = it.overview
                             toolbar.title = it.name
+
+                            isFavourite = it.favourite
+                            menu?.findItem(R.id.favourite_menu_detail)?.icon =
+                                AppCompatResources.getDrawable(
+                                    binding.root.context,
+                                    if (it.favourite)
+                                        R.drawable.ic_baseline_favorite_24_white
+                                    else
+                                        R.drawable.ic_baseline_favorite_border_24
+                                )
                         }
                     }
                     binding.content.visibility = View.VISIBLE
                     binding.appbar.visibility = View.VISIBLE
                     binding.progressBarDetail.visibility = View.GONE
-                    showError(binding,View.GONE,it.message)
+
+                    showError(binding, View.GONE, "${it.message}")
                 }
-                ViewState.FAILURE -> {
+                Status.FAILURE -> {
                     binding.content.visibility = View.INVISIBLE
                     binding.appbar.visibility = View.INVISIBLE
                     binding.progressBarDetail.visibility = View.GONE
-                    showError(binding,View.VISIBLE,it.message)
+                    showError(binding, View.VISIBLE, "${it.message}")
                 }
-                ViewState.LOADING -> {
+                Status.LOADING -> {
                     binding.progressBarDetail.visibility = View.VISIBLE
                     binding.content.visibility = View.INVISIBLE
                     binding.appbar.visibility = View.INVISIBLE
-                    showError(binding,View.GONE,it.message)
+                    showError(binding, View.GONE, "${it.message}")
                 }
             }
         })
@@ -91,6 +107,15 @@ class DetailTvActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_share, menu)
+        menu?.findItem(R.id.favourite_menu_detail)?.icon =
+            AppCompatResources.getDrawable(
+                this,
+                if (isFavourite)
+                    R.drawable.ic_baseline_favorite_24_white
+                else
+                    R.drawable.ic_baseline_favorite_border_24
+            )
+        this.menu = menu
         return true
     }
 
@@ -102,6 +127,8 @@ class DetailTvActivity : AppCompatActivity() {
                 .setChooserTitle(getString(R.string.share_title))
                 .setText(getString(R.string.share_text, tvEntity.name))
                 .startChooser()
+        } else if (item.itemId == R.id.favourite_menu_detail) {
+            viewModel.setFavourite(tvEntity)
         }
         return true
     }

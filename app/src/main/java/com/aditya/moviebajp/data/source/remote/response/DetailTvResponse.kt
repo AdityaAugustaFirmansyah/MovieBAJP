@@ -1,15 +1,24 @@
 package com.aditya.moviebajp.data.source.remote.response
 
+import com.google.gson.annotations.SerializedName
+
 data class DetailTvResponse(
-    val poster_path:String,
-    val backdrop_path:String?,
+    @SerializedName("poster_path")
+    val posterPath:String,
+    @SerializedName("backdrop_path")
+    val backdropPath:String?,
     val overview:String,
-    val first_air_date:String,
+    @SerializedName("first_air_date")
+    val firstAirDate:String,
     val id:Int,
-    val original_name:String,
+    @SerializedName("original_name")
+    val originalName:String,
     val name:String,
-    val original_language:String,
+    @SerializedName("original_language")
+    val originalLanguage:String,
     val popularity:Double,
-    val vote_count:Int,
-    val vote_average:Double
+    @SerializedName("vote_count")
+    val voteCount:Int,
+    @SerializedName("vote_average")
+    val voteAverage:Double
 )

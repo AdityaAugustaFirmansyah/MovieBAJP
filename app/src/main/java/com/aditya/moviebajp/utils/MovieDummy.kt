@@ -1,114 +1,138 @@
 package com.aditya.moviebajp.utils
 
-import com.aditya.moviebajp.data.MovieEntity
 import com.aditya.moviebajp.data.MovieState
-import com.aditya.moviebajp.data.TvEntity
-import com.aditya.moviebajp.data.ViewState
+import com.aditya.moviebajp.data.source.local.entity.MovieEntity
+import com.aditya.moviebajp.data.source.local.entity.TvEntity
+import com.aditya.moviebajp.vo.Status
 import com.aditya.moviebajp.data.source.remote.response.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object MovieDummy {
     fun generateMovies(): List<MovieEntity> {
-        return Gson().fromJson(
-            DATA_MOVIE,
-            object : TypeToken<List<MovieEntity>>() {}.type
-        )
+        return generateMoviesResponse().results.map {
+            MovieEntity(
+                it.posterPath,
+                it.backdropPath,
+                it.overview,
+                it.releaseDate,
+                it.id,
+                it.originalTitle,
+                it.title,
+                it.originalLanguage,
+                it.popularity,
+                false,
+                it.voteCount,
+                it.adult,
+                it.voteAverage
+            )
+        }
     }
 
     fun generateTv(): List<TvEntity> {
-        return Gson().fromJson(
-            DATA_TV,
-            object : TypeToken<List<TvEntity>>() {}.type
+        return generateTvResponse().results.map {
+            TvEntity(
+                it.posterPath,
+                it.backdropPath,
+                it.overview,
+                it.firstAirDate,
+                it.id,
+                it.originalName,
+                it.name,
+                it.originalLanguage,
+                false,
+                it.popularity,
+                it.voteCount,
+                it.voteAverage
+            )
+        }
+    }
+
+    fun getDetailMovie(): MovieEntity {
+        val movie = generateDetailMovieResponse()
+        return MovieEntity(
+            movie.posterPath,
+            movie.backdropPath,
+            movie.overview,
+            movie.releaseDate,
+            movie.id,
+            movie.originalTitle,
+            movie.title,
+            movie.originalLanguage,
+            movie.popularity,
+            false,
+            movie.voteCount,
+            movie.adult,
+            movie.voteAverage
         )
     }
 
-    fun getDetailMovie(index: Int): MovieEntity {
-        return generateMovies()[index]
-    }
-
-    fun getDetailTv(index: Int): TvEntity {
-        return generateTv()[index]
+    fun getDetailTv(): TvEntity {
+        val tv = generateDetailTvResponse()
+        return TvEntity(
+            tv.posterPath,
+            tv.backdropPath,
+            tv.overview,
+            tv.firstAirDate,
+            tv.id,
+            tv.originalName,
+            tv.name,
+            tv.originalLanguage,
+            false,
+            tv.popularity,
+            tv.voteCount,tv.voteAverage
+        )
     }
 
     fun generateMoviesResponse(): MovieResponse {
-        val results = mutableListOf<MovieData>()
-        results.addAll(generateMovies().map {
-            MovieData(
-                it.poster_path,
-                it.backdrop_path,
-                it.overview,
-                it.release_date,
-                it.id,
-                it.original_title,
-                it.title,
-                it.original_language,
-                it.popularity,
-                it.vote_count,
-                it.adult,
-                it.vote_average
-            )
-        })
+        val results = Gson().fromJson<List<MovieData>>(
+            DATA_MOVIE, object : TypeToken<List<MovieData>>() {}.type)
         return MovieResponse(results, "")
     }
 
     fun generateTvResponse(): TvResponse {
-        val results = mutableListOf<DataTv>()
-        results.addAll(generateTv().map {
-            DataTv(
-                it.poster_path,
-                it.backdrop_path,
-                it.overview,
-                it.first_air_date,
-                it.id,
-                it.original_name,
-                it.name,
-                it.original_language,
-                it.popularity,
-                it.vote_count,
-                it.vote_average
-            )
-        })
+        val results = Gson().fromJson<List<DataTv>>(
+            DATA_TV, object : TypeToken<List<DataTv>>() {}.type)
         return TvResponse(results, "")
     }
 
     fun generateDetailTvResponse(): DetailTvResponse {
         val tv = generateTv()[0]
         return DetailTvResponse(
-            tv.poster_path,
-            tv.backdrop_path,
+            tv.posterPath,
+            tv.backdropPath,
             tv.overview,
-            tv.first_air_date,
+            tv.firstAirDate,
             tv.id,
-            tv.original_name,
+            tv.originalName,
             tv.name,
-            tv.original_language,
+            tv.originalLanguage,
             tv.popularity,
-            tv.vote_count,
-            tv.vote_average
+            tv.voteCount,
+            tv.voteAverage
         )
     }
 
     fun generateDetailMovieResponse(): DetailMovieResponse {
         val movie = generateMovies()[0]
         return DetailMovieResponse(
-            movie.poster_path,
-            movie.backdrop_path,
+            movie.posterPath,
+            movie.backdropPath,
             movie.overview,
-            movie.release_date,
+            movie.releaseDate,
             movie.id,
-            movie.original_title,
+            movie.originalTitle,
             movie.title,
-            movie.original_language,
+            movie.originalLanguage,
             movie.popularity,
-            movie.vote_count,
+            movie.voteCount,
             movie.adult,
-            movie.vote_average
+            movie.voteAverage
         )
     }
 
     fun generateMoviesState(): MovieState {
-        return MovieState(ViewState.SUCCESS, generateMovies(),"")
+        return MovieState(Status.SUCCESS, generateMovies(),"")
     }
 
     private const val DATA_MOVIE = "[{\n" +

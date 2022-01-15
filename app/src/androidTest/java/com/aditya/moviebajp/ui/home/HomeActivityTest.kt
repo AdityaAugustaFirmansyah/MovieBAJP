@@ -44,24 +44,16 @@ import org.junit.Test
 *   - memastikan recyclerview telah di tampilkan
 *   - memberi tindakan click pada recyclerview untuk posisi pertama
 *   - memastikan tv_title_detail sudah di tampilkan
-*   - memastikan tv_title_detail menampilkan hasil sesuai expektasi
 *   - memastikan poster_detail sudah di tampilkan
 *   - memastikan backdrop sudah di tampilkan
 *   - memastikan tv_language_detail sudah di tampilkan
-*   - memastikan tv_language_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_date_detail sudah di tampilkan
-*   - memastikan tv_date_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_adult_detail sudah di tampilkan
-*   - memastikan tv_adult_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_popularity_detail sudah di tampilkan
-*   - memastikan tv_popularity_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_total_detail sudah di tampilkan
-*   - memastikan tv_total_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_avarage_detail sudah di tampilkan
-*   - memastikan tv_avarage_detail menampilkan hasil sesuai expektasi
 *   - memberikan aksi pada id textView18 untuk scroll
 *   - memastikan tv_description_detail sudah di tampilkan
-*   - memastikan tv_description_detail menampilkan hasil sesuai expektasi
 *
 * 4. pengujian menampilkan detail tv
 *   - Aplikasi terbuka dan menampilkan tab layout,viewpager dan, recycler view dari data movie
@@ -69,22 +61,15 @@ import org.junit.Test
 *   - memastikan rvTv telah di tampilkan
 *   - memberi tindakan click pada recycler view untuk posisi pertama
 *   - memastikan tv_title_detail sudah di tampilkan
-*   - memastikan tv_title_detail menampilkan hasil sesuai expektasi
 *   - memastikan poster_detail sudah di tampilkan
 *   - memastikan backdrop sudah di tampilkan
 *   - memastikan tv_language_detail sudah di tampilkan
-*   - memastikan tv_language_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_date_detail sudah di tampilkan
-*   - memastikan tv_date_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_popularity_detail sudah di tampilkan
-*   - memastikan tv_popularity_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_total_detail sudah di tampilkan
-*   - memastikan tv_total_detail menampilkan hasil sesuai expektasi
 *   - memastikan tv_avarage_detail sudah di tampilkan
-*   - memastikan tv_avarage_detail menampilkan hasil sesuai expektasi
 *   - memberikan aksi pada id textView18 untuk scroll
 *   - memastikan tv_description_detail sudah di tampilkan
-*   - memastikan tv_description_detail menampilkan hasil sesuai expektasi
 *
 * 5. pengujian untuk menampilkan data kosong pada movie
 *   - Aplikasi terbuka dan menampilkan tab layout,viewpager dan, recycler view dari data movie
@@ -139,7 +124,7 @@ class HomeActivityTest {
         onView(withId(R.id.tv_adult_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_popularity_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_total_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_avarage_detail)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_average_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.textView18)).perform(betterScrollTo())
         onView(withId(R.id.tv_description_detail)).check(matches(isDisplayed()))
     }
@@ -189,7 +174,7 @@ class HomeActivityTest {
         onView(withId(R.id.tv_date_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_popularity_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_total_detail)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_avarage_detail)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_average_detail)).check(matches(isDisplayed()))
         onView(withId(R.id.textView18)).perform(betterScrollTo())
         onView(withId(R.id.tv_description_detail)).check(matches(isDisplayed()))
     }

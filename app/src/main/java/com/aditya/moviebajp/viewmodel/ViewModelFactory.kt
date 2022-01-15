@@ -1,10 +1,12 @@
 package com.aditya.moviebajp.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aditya.moviebajp.data.source.MovieRepository
 import com.aditya.moviebajp.injection.Injection
-import com.aditya.moviebajp.network.RestApi
+import com.aditya.moviebajp.ui.favourite.movie.MovieFavouriteViewModel
+import com.aditya.moviebajp.ui.favourite.tv.TvFavouriteViewModel
 import com.aditya.moviebajp.ui.movie.MovieViewModel
 import com.aditya.moviebajp.ui.tv.TvViewModel
 
@@ -12,8 +14,8 @@ class ViewModelFactory(private val movieRepository: MovieRepository):ViewModelPr
     companion object{
         @Volatile
         private var instance:ViewModelFactory?=null
-        fun getInstance(restApi: RestApi)= instance?: synchronized(this){
-            instance?:ViewModelFactory(Injection.provideRepository(restApi))
+        fun getInstance(context: Context)= instance?: synchronized(this){
+            instance?:ViewModelFactory(Injection.provideRepository(context))
         }
     }
 
@@ -27,6 +29,13 @@ class ViewModelFactory(private val movieRepository: MovieRepository):ViewModelPr
                 TvViewModel(movieRepository) as T
             }
 
+            modelClass.isAssignableFrom(MovieFavouriteViewModel::class.java)->{
+                MovieFavouriteViewModel(movieRepository) as T
+            }
+
+            modelClass.isAssignableFrom(TvFavouriteViewModel::class.java)->{
+                TvFavouriteViewModel(movieRepository) as T
+            }
             else-> throw Throwable("Unknown View Model")
         }
     }

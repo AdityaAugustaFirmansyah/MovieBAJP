@@ -8,10 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.moviebajp.R
-import com.aditya.moviebajp.data.ViewState
 import com.aditya.moviebajp.databinding.FragmentMovieBinding
-import com.aditya.moviebajp.network.ApiClient
 import com.aditya.moviebajp.viewmodel.ViewModelFactory
+import com.aditya.moviebajp.vo.Status
 
 class MovieFragment : Fragment() {
 
@@ -30,22 +29,22 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel = ViewModelProvider(
-            this, ViewModelFactory.getInstance(ApiClient.restApi())
+            this, ViewModelFactory.getInstance(requireContext())
         )[MovieViewModel::class.java]
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         viewModel.getData().observe(viewLifecycleOwner, {
-            if (it.viewState==ViewState.LOADING){
+            if (it.status== Status.LOADING){
                 binding.progressBar.visibility = View.VISIBLE
                 showError(binding,View.GONE,"")
                 binding.recyclerView.visibility = View.GONE
-            }else if (it.viewState == ViewState.SUCCESS){
+            }else if (it.status == Status.SUCCESS){
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.apply {
-                    adapter = MovieAdapter(it.success)
+                    adapter = it.data?.let { it1 -> MovieAdapter(it1) }
                 }
-                if (it.success.isEmpty()) {
+                if (it.message?.isNotEmpty() == true) {
                     binding.emptyMovie.visibility = View.VISIBLE
                     binding.recyclerView.visibility = View.GONE
                     showError(binding,View.VISIBLE,getString(R.string.empty_list))
@@ -53,13 +52,23 @@ class MovieFragment : Fragment() {
                     binding.recyclerView.visibility = View.VISIBLE
                     showError(binding,View.GONE,"")
                 }
-            }else if (it.viewState == ViewState.FAILURE){
+            }else if (it.status == Status.FAILURE){
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.visibility = View.GONE
-                showError(binding,View.VISIBLE,it.msg)
+                it.message?.let { it1 -> showError(binding,View.VISIBLE, it1) }
             }
         })
+
+        binding.toolbar3.setOnMenuItemClickListener {
+            if (it.itemId == R.id.menu_ascending){
+                viewModel.sortingAsc()
+            }else if (it.itemId == R.id.menu_descending){
+                viewModel.sortingDesc()
+            }
+            true
+        }
     }
+
     companion object{
         fun showError(binding: FragmentMovieBinding,visibility:Int,message:String){
             binding.emptyMovie.visibility = visibility

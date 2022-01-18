@@ -5,8 +5,7 @@ import com.aditya.moviebajp.data.source.MovieRepository
 import com.aditya.moviebajp.data.source.local.LocalDataSource
 import com.aditya.moviebajp.data.source.local.room.DatabaseLocal
 import com.aditya.moviebajp.data.source.remote.RemoteDataSource
-import com.aditya.moviebajp.network.ApiClient
-import com.aditya.moviebajp.network.RestApi
+import com.aditya.moviebajp.data.source.remote.network.ApiClient
 import com.aditya.moviebajp.utils.AppExecutors
 
 object Injection {

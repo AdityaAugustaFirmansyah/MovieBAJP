@@ -3,13 +3,13 @@ package com.aditya.moviebajp.ui.tv
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.aditya.moviebajp.data.TvState
-import com.aditya.moviebajp.vo.Status
+import androidx.paging.PagedList
 import com.aditya.moviebajp.data.source.MovieRepository
-import com.aditya.moviebajp.utils.MovieDummy
+import com.aditya.moviebajp.data.source.local.entity.TvEntity
+import com.aditya.moviebajp.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,7 +19,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class TvFavouriteViewModelTest {
+class TvViewModelTest {
     private lateinit var viewModelTest: TvViewModel
 
     @Mock
@@ -29,7 +29,10 @@ class TvFavouriteViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var observer: Observer<TvState>
+    private lateinit var observer: Observer<Resource<PagedList<TvEntity>>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<TvEntity>
 
     @Before
     fun setUp(){
@@ -38,15 +41,16 @@ class TvFavouriteViewModelTest {
 
     @Test
     fun testLoadTv() {
-        val dummyTv = TvState(MovieDummy.generateTv(),"", Status.SUCCESS)
-        val tv = MutableLiveData<TvState>()
+        val dummyTv = Resource.success(pagedList)
+        `when`(dummyTv.data?.size).thenReturn(5)
+        val tv = MutableLiveData<Resource<PagedList<TvEntity>>>()
         tv.value = dummyTv
-        `when`(repository.getAllTv()).thenReturn(tv)
-        val tvEntity = viewModelTest.getData().value
-        verify(repository).getAllTv()
+        `when`(repository.getAllTv("")).thenReturn(tv)
+        val tvEntity = viewModelTest.getData("").value
+        verify(repository).getAllTv("")
         assertNotNull(tvEntity)
-        assertEquals(dummyTv.tvs.size.toLong(),tvEntity?.tvs?.size?.toLong())
-        viewModelTest.getData().observeForever(observer)
+        assertEquals(dummyTv.data?.size?.toLong(),tvEntity?.data?.size?.toLong())
+        viewModelTest.getData("").observeForever(observer)
         verify(observer).onChanged(dummyTv)
     }
 }

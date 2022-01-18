@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.moviebajp.R
 import com.aditya.moviebajp.databinding.FragmentMovieBinding
 import com.aditya.moviebajp.ui.movie.MovieFragment
-import com.aditya.moviebajp.ui.tv.TvAdapter
 import com.aditya.moviebajp.viewmodel.ViewModelFactory
 
 class TvFavouriteFragment : Fragment() {
@@ -44,7 +43,7 @@ class TvFavouriteFragment : Fragment() {
                     binding.progressBar.visibility = View.GONE
                     MovieFragment.showError(binding,View.GONE,"")
                     binding.apply {
-                        val adapter = TvAdapter(it)
+                        val adapter = TvFavouriteAdapter(it)
                         recyclerView.adapter = adapter
                     }
                 }

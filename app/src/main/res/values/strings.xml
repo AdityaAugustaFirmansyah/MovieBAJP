@@ -19,7 +19,6 @@
     <string name="share_text">Segara Lihat Film %s di apps ini</string>
     <string name="empty_list">Empty List</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favourite">Favourite</string>
     <string name="ascending">Ascending</string>
     <string name="descending" >Descending</string>

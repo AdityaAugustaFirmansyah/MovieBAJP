@@ -12,7 +12,7 @@ import com.aditya.moviebajp.R
 import com.aditya.moviebajp.data.source.local.entity.MovieEntity
 import com.aditya.moviebajp.vo.Status
 import com.aditya.moviebajp.databinding.ActivityDetailBinding
-import com.aditya.moviebajp.network.ApiClient
+import com.aditya.moviebajp.data.source.remote.network.ApiClient
 import com.aditya.moviebajp.ui.detail.tv.DetailTvActivity
 import com.aditya.moviebajp.viewmodel.DetailViewModelFactory
 import com.bumptech.glide.Glide

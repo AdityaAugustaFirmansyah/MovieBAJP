@@ -1,9 +1,7 @@
 package com.aditya.moviebajp.utils
 
-import com.aditya.moviebajp.data.MovieState
 import com.aditya.moviebajp.data.source.local.entity.MovieEntity
 import com.aditya.moviebajp.data.source.local.entity.TvEntity
-import com.aditya.moviebajp.vo.Status
 import com.aditya.moviebajp.data.source.remote.response.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -129,10 +127,6 @@ object MovieDummy {
             movie.adult,
             movie.voteAverage
         )
-    }
-
-    fun generateMoviesState(): MovieState {
-        return MovieState(Status.SUCCESS, generateMovies(),"")
     }
 
     private const val DATA_MOVIE = "[{\n" +

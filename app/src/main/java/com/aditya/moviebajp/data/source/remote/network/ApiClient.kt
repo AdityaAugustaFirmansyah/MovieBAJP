@@ -1,4 +1,4 @@
-package com.aditya.moviebajp.network
+package com.aditya.moviebajp.data.source.remote.network
 
 import com.aditya.moviebajp.BuildConfig
 import okhttp3.Interceptor

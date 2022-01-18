@@ -3,14 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/drawable/ic_baseline_favorite_24_white.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/drawable/ic_baseline_local.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/drawable/ic_baseline_tv.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/activity_detail.xml" value="0.25" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/activity_home.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/activity_main.xml" value="0.10055724417426545" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/activity_splash_screen.xml" value="0.15" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/fragment_detail.xml" value="0.1" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/fragment_favourite.xml" value="0.1" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/fragment_movie.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/fragment_tv.xml" value="0.10055724417426545" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/layout/item_movie.xml" value="0.5" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/menu/menu_bottom_nav.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/menu/menu_filter.xml" value="0.13148148148148148" />
         <entry key="..\:/Users/aditya/MovieBAJP/app/src/main/res/menu/menu_share.xml" value="0.1" />
       </map>
     </option>

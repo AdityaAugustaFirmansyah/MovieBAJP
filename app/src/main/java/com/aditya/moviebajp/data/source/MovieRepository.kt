@@ -1,6 +1,8 @@
 package com.aditya.moviebajp.data.source
 
 import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.aditya.moviebajp.data.source.local.LocalDataSource
 import com.aditya.moviebajp.data.source.local.entity.MovieEntity
 import com.aditya.moviebajp.data.source.local.entity.TvEntity
@@ -12,6 +14,7 @@ import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
 import com.aditya.moviebajp.data.source.remote.response.MovieResponse
 import com.aditya.moviebajp.data.source.remote.response.TvResponse
 import com.aditya.moviebajp.utils.AppExecutors
+import com.aditya.moviebajp.utils.SortUtils
 import com.aditya.moviebajp.vo.Resource
 
 class MovieRepository private constructor(
@@ -34,13 +37,25 @@ class MovieRepository private constructor(
             }
     }
 
-    override fun getAllMovie(): LiveData<Resource<List<MovieEntity>>> {
-        return object : NetworkBoundResource<List<MovieEntity>, MovieResponse>(appExecutors) {
-            override fun loadFromDb(): LiveData<List<MovieEntity>> {
-                return localDataSource.getAllMovie()
+    override fun getAllMovie(sort: String): LiveData<Resource<PagedList<MovieEntity>>> {
+        return object : NetworkBoundResource<PagedList<MovieEntity>, MovieResponse>(appExecutors) {
+            override fun loadFromDb(): LiveData<PagedList<MovieEntity>> {
+                val config = PagedList.Config.Builder()
+                    .setEnablePlaceholders(false)
+                    .setInitialLoadSizeHint(4)
+                    .setPageSize(4)
+                    .build()
+                return LivePagedListBuilder(
+                    when (sort) {
+                        SortUtils.ASCENDING -> localDataSource.getAllMovieAsc()
+                        SortUtils.DESCENDING -> localDataSource.getAllMovieDesc()
+                        else -> localDataSource.getAllMovie()
+                    },
+                    config
+                ).build()
             }
 
-            override fun shouldFetch(data: List<MovieEntity>?): Boolean {
+            override fun shouldFetch(data: PagedList<MovieEntity>?): Boolean {
                 return data == null || data.isEmpty()
             }
 
@@ -74,13 +89,24 @@ class MovieRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getAllTv(): LiveData<Resource<List<TvEntity>>> {
-        return object : NetworkBoundResource<List<TvEntity>, TvResponse>(appExecutors) {
-            override fun loadFromDb(): LiveData<List<TvEntity>> {
-                return localDataSource.getAllTv()
+    override fun getAllTv(sort: String): LiveData<Resource<PagedList<TvEntity>>> {
+        return object : NetworkBoundResource<PagedList<TvEntity>, TvResponse>(appExecutors) {
+            override fun loadFromDb(): LiveData<PagedList<TvEntity>> {
+                val config = PagedList.Config.Builder()
+                    .setEnablePlaceholders(false)
+                    .setPageSize(4)
+                    .setInitialLoadSizeHint(4)
+                    .build()
+                return LivePagedListBuilder(
+                    when (sort) {
+                        SortUtils.ASCENDING -> localDataSource.getAllTvAsc()
+                        SortUtils.DESCENDING -> localDataSource.getAllTvDesc()
+                        else -> localDataSource.getAllTv()
+                    }, config
+                ).build()
             }
 
-            override fun shouldFetch(data: List<TvEntity>?): Boolean {
+            override fun shouldFetch(data: PagedList<TvEntity>?): Boolean {
                 return data == null || data.isEmpty()
             }
 
@@ -128,23 +154,25 @@ class MovieRepository private constructor(
             }
 
             override fun saveCallResult(data: DetailMovieResponse) {
-                localDataSource.insertMovies(mutableListOf(
-                    MovieEntity(
-                        data.posterPath,
-                        data.backdropPath,
-                        data.overview,
-                        data.releaseDate,
-                        data.id,
-                        data.originalTitle,
-                        data.title,
-                        data.originalLanguage,
-                        data.popularity,
-                        false,
-                        data.voteCount,
-                        data.adult,
-                        data.voteAverage
+                localDataSource.insertMovies(
+                    mutableListOf(
+                        MovieEntity(
+                            data.posterPath,
+                            data.backdropPath,
+                            data.overview,
+                            data.releaseDate,
+                            data.id,
+                            data.originalTitle,
+                            data.title,
+                            data.originalLanguage,
+                            data.popularity,
+                            false,
+                            data.voteCount,
+                            data.adult,
+                            data.voteAverage
+                        )
                     )
-                ))
+                )
             }
 
         }.asLiveData()
@@ -195,7 +223,7 @@ class MovieRepository private constructor(
     }
 
     override fun updateTv(tvEntity: TvEntity) {
-        appExecutors.diskIO().execute{
+        appExecutors.diskIO().execute {
             localDataSource.updateTv(tvEntity)
         }
     }
@@ -206,21 +234,5 @@ class MovieRepository private constructor(
 
     override fun getAllTvFavourite(): LiveData<List<TvEntity>> {
         return localDataSource.getAllTvFavourite()
-    }
-
-    override fun getAllMovieAscending(movies: List<MovieEntity>): List<MovieEntity> {
-        return movies.sortedBy { it.title }
-    }
-
-    override fun getAllMovieDesc(movies: List<MovieEntity>): List<MovieEntity> {
-        return movies.sortedByDescending { it.title }
-    }
-
-    override fun getAllTvAscending(movies: List<TvEntity>): List<TvEntity> {
-        return movies.sortedBy { it.name }
-    }
-
-    override fun getAllTvDesc(movies: List<TvEntity>): List<TvEntity> {
-        return movies.sortedByDescending { it.name }
     }
 }

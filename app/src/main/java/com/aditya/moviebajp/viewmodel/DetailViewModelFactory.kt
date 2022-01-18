@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aditya.moviebajp.injection.Injection
-import com.aditya.moviebajp.network.RestApi
 import com.aditya.moviebajp.ui.detail.movie.DetailMovieViewModel
 import com.aditya.moviebajp.ui.detail.tv.DetailTvViewModel
 

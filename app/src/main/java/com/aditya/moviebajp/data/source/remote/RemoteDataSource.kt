@@ -6,8 +6,8 @@ import com.aditya.moviebajp.data.source.remote.response.DetailMovieResponse
 import com.aditya.moviebajp.data.source.remote.response.DetailTvResponse
 import com.aditya.moviebajp.data.source.remote.response.MovieResponse
 import com.aditya.moviebajp.data.source.remote.response.TvResponse
-import com.aditya.moviebajp.network.ApiClient
-import com.aditya.moviebajp.network.RestApi
+import com.aditya.moviebajp.data.source.remote.network.ApiClient
+import com.aditya.moviebajp.data.source.remote.network.RestApi
 import com.aditya.moviebajp.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
@@ -117,23 +117,4 @@ class RemoteDataSource private constructor(private val restApi: RestApi) {
         return result
     }
 
-    interface LoadMovieCallback{
-        fun onSuccess(movieResponse: MovieResponse)
-        fun onFailure(msg:String)
-    }
-
-    interface LoadTvCallback{
-        fun onSuccess(tvResponse: TvResponse)
-        fun onFailure(msg:String)
-    }
-
-    interface LoadDetailMovieCallback{
-        fun onSuccess(detailMovieResponse: DetailMovieResponse)
-        fun onFailure(msg:String)
-    }
-
-    interface LoadDetailTvCallback{
-        fun onSuccess(detailTvResponse: DetailTvResponse)
-        fun onFailure(msg:String)
-    }
 }

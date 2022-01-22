@@ -43,7 +43,7 @@ class TvAdapter : PagedListAdapter<TvEntity,TvAdapter.Holder>(DIFF_CALLBACK) {
     }
 
     companion object{
-        val DIFF_CALLBACK = object:DiffUtil.ItemCallback<TvEntity>(){
+        private val DIFF_CALLBACK = object:DiffUtil.ItemCallback<TvEntity>(){
             override fun areItemsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean {
                 return oldItem.id == newItem.id
             }

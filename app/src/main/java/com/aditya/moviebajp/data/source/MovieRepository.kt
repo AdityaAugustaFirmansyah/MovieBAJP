@@ -228,11 +228,21 @@ class MovieRepository private constructor(
         }
     }
 
-    override fun getAllMovieFavourite(): LiveData<List<MovieEntity>> {
-        return localDataSource.getAllMovieFavourite()
+    override fun getAllMovieFavourite(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(4)
+            .setInitialLoadSizeHint(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllMovieFavourite(), config).build()
     }
 
-    override fun getAllTvFavourite(): LiveData<List<TvEntity>> {
-        return localDataSource.getAllTvFavourite()
+    override fun getAllTvFavourite(): LiveData<PagedList<TvEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(4)
+            .setInitialLoadSizeHint(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllTvFavourite(), config).build()
     }
 }

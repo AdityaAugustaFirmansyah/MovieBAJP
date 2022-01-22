@@ -33,7 +33,7 @@ class FavouriteFragment : Fragment() {
             binding.tabLayoutFavourite.newTab().setText(getString(R.string.tv))
         )
 
-        binding.viewPagerFavourite.adapter = FavouritePagerAdapter(requireActivity(),
+        binding.viewPagerFavourite.adapter = FavouritePagerAdapter(this,
             mutableListOf(MovieFavouriteFragment(),TvFavouriteFragment()))
 
         TabLayoutMediator(

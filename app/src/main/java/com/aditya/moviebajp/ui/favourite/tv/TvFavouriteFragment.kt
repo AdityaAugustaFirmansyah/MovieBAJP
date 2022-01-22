@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.moviebajp.R
 import com.aditya.moviebajp.databinding.FragmentMovieBinding
 import com.aditya.moviebajp.ui.movie.MovieFragment
+import com.aditya.moviebajp.ui.tv.TvAdapter
 import com.aditya.moviebajp.viewmodel.ViewModelFactory
 
 class TvFavouriteFragment : Fragment() {
@@ -33,20 +34,16 @@ class TvFavouriteFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.toolbar3.visibility = View.GONE
+        val adapter = TvAdapter()
+        binding.recyclerView.adapter = adapter
         viewModel.getData().observe(viewLifecycleOwner, {
-            when (it.isEmpty()) {
-                true -> {
-                    binding.progressBar.visibility = View.GONE
-                    MovieFragment.showError(binding, View.VISIBLE, getString(R.string.empty_list))
-                }
-                false -> {
-                    binding.progressBar.visibility = View.GONE
-                    MovieFragment.showError(binding,View.GONE,"")
-                    binding.apply {
-                        val adapter = TvFavouriteAdapter(it)
-                        recyclerView.adapter = adapter
-                    }
-                }
+            adapter.submitList(it)
+            if(it.isNotEmpty()){
+                MovieFragment.showError(binding,View.GONE,"")
+                binding.progressBar.visibility = View.GONE
+            }else{
+                binding.progressBar.visibility = View.GONE
+                MovieFragment.showError(binding, View.VISIBLE, getString(R.string.empty_list))
             }
         })
     }

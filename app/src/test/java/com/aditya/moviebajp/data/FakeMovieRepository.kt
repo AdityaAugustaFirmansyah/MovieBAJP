@@ -21,7 +21,7 @@ import com.aditya.moviebajp.vo.Resource
 class FakeMovieRepository(private val remoteDataSource: RemoteDataSource,private val localDataSource: LocalDataSource,private val appExecutors: AppExecutors) :
     MovieDataSource {
 
-    override fun getAllMovie(sort:String): LiveData<Resource<PagedList<MovieEntity>>> {
+    override fun getAllMovie(sort: String): LiveData<Resource<PagedList<MovieEntity>>> {
         return object : NetworkBoundResource<PagedList<MovieEntity>, MovieResponse>(appExecutors) {
             override fun loadFromDb(): LiveData<PagedList<MovieEntity>> {
                 val config = PagedList.Config.Builder()
@@ -30,7 +30,11 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource,private
                     .setPageSize(4)
                     .build()
                 return LivePagedListBuilder(
-                    localDataSource.getAllMovie(SortUtils.getSortedQueryMovie(sort)),
+                    when (sort) {
+                        SortUtils.ASCENDING -> localDataSource.getAllMovieAsc()
+                        SortUtils.DESCENDING -> localDataSource.getAllMovieDesc()
+                        else -> localDataSource.getAllMovie()
+                    },
                     config
                 ).build()
             }
@@ -78,11 +82,11 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource,private
                     .setInitialLoadSizeHint(4)
                     .build()
                 return LivePagedListBuilder(
-                    localDataSource.getAllTv(
-                        SortUtils.getSortedQueryTv(
-                            sort
-                        )
-                    ), config
+                    when (sort) {
+                        SortUtils.ASCENDING -> localDataSource.getAllTvAsc()
+                        SortUtils.DESCENDING -> localDataSource.getAllTvDesc()
+                        else -> localDataSource.getAllTv()
+                    }, config
                 ).build()
             }
 
@@ -208,11 +212,21 @@ class FakeMovieRepository(private val remoteDataSource: RemoteDataSource,private
         }
     }
 
-    override fun getAllMovieFavourite(): LiveData<List<MovieEntity>> {
-        return localDataSource.getAllMovieFavourite()
+    override fun getAllMovieFavourite(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(4)
+            .setInitialLoadSizeHint(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllMovieFavourite(), config).build()
     }
 
-    override fun getAllTvFavourite(): LiveData<List<TvEntity>> {
-        return localDataSource.getAllTvFavourite()
+    override fun getAllTvFavourite(): LiveData<PagedList<TvEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(4)
+            .setInitialLoadSizeHint(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllTvFavourite(), config).build()
     }
 }

@@ -45,8 +45,8 @@ interface MovieDao {
     fun getMovie(id:Int):LiveData<MovieEntity>
 
     @Query("SELECT * FROM MovieEntity WHERE favourite = 1")
-    fun getAllMoviesFavourite():LiveData<List<MovieEntity>>
+    fun getAllMoviesFavourite():DataSource.Factory<Int,MovieEntity>
 
     @Query("SELECT * FROM tvEntity WHERE favourite = 1")
-    fun getAllTvsFavourite():LiveData<List<TvEntity>>
+    fun getAllTvsFavourite():DataSource.Factory<Int,TvEntity>
 }

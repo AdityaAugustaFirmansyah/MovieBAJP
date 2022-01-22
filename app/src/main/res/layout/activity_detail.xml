@@ -40,7 +40,7 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:title="@string/app_name"
                 android:id="@+id/toolbar"
-                app:menu="@menu/menu_share"
+                app:menu="@menu/menu_detail"
                 app:layout_collapseMode="pin"
                 app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>

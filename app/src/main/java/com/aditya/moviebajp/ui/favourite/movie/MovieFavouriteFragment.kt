@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.moviebajp.R
 import com.aditya.moviebajp.databinding.FragmentMovieBinding
+import com.aditya.moviebajp.ui.movie.MovieAdapter
 import com.aditya.moviebajp.viewmodel.ViewModelFactory
 
 class MovieFavouriteFragment : Fragment() {
@@ -33,12 +34,12 @@ class MovieFavouriteFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.toolbar3.visibility = View.GONE
+        val adapter = MovieAdapter()
+        binding.recyclerView.adapter = adapter
         viewModel.getData().observe(viewLifecycleOwner, {
+            adapter.submitList(it)
             if (it.isNotEmpty()) {
                 binding.progressBar.visibility = View.GONE
-                binding.recyclerView.apply {
-                    adapter = it?.let { it1 -> MovieFavouriteAdapter(it1) }
-                }
                 showError(binding,View.GONE,"")
             } else{
                 binding.progressBar.visibility = View.GONE

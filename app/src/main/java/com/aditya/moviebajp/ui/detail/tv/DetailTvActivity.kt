@@ -6,12 +6,11 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModelProvider
 import com.aditya.moviebajp.R
 import com.aditya.moviebajp.data.source.local.entity.TvEntity
-import com.aditya.moviebajp.databinding.ActivityDetailBinding
 import com.aditya.moviebajp.data.source.remote.network.ApiClient
+import com.aditya.moviebajp.databinding.ActivityDetailBinding
 import com.aditya.moviebajp.viewmodel.DetailViewModelFactory
 import com.aditya.moviebajp.vo.Status
 import com.bumptech.glide.Glide
@@ -106,7 +105,7 @@ class DetailTvActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_share, menu)
+        menuInflater.inflate(R.menu.menu_detail, menu)
         menu?.findItem(R.id.favourite_menu_detail)?.icon =
             AppCompatResources.getDrawable(
                 this,
@@ -120,14 +119,7 @@ class DetailTvActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.share) {
-            val mimeType = "text/plain"
-            ShareCompat.IntentBuilder(this)
-                .setType(mimeType)
-                .setChooserTitle(getString(R.string.share_title))
-                .setText(getString(R.string.share_text, tvEntity.name))
-                .startChooser()
-        } else if (item.itemId == R.id.favourite_menu_detail) {
+        if (item.itemId == R.id.favourite_menu_detail) {
             viewModel.setFavourite(tvEntity)
         }
         return true

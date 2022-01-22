@@ -2,7 +2,6 @@ package com.aditya.moviebajp.data.source.local
 
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.aditya.moviebajp.data.source.local.entity.MovieEntity
 import com.aditya.moviebajp.data.source.local.entity.TvEntity
 import com.aditya.moviebajp.data.source.local.room.MovieDao
@@ -20,8 +19,8 @@ class LocalDataSource private constructor(private val movieDao: MovieDao) {
     fun getAllMovieDesc():DataSource.Factory<Int,MovieEntity> = movieDao.getAllMoviesDesc()
     fun insertMovies(movieList: MutableList<MovieEntity>) = movieDao.insertMovies(movieList)
 
-    fun getAllMovieFavourite(): LiveData<List<MovieEntity>> = movieDao.getAllMoviesFavourite()
-    fun getAllTvFavourite(): LiveData<List<TvEntity>> = movieDao.getAllTvsFavourite()
+    fun getAllMovieFavourite(): DataSource.Factory<Int,MovieEntity> = movieDao.getAllMoviesFavourite()
+    fun getAllTvFavourite(): DataSource.Factory<Int,TvEntity> = movieDao.getAllTvsFavourite()
 
     fun getAllTv():DataSource.Factory<Int,TvEntity> = movieDao.getAllTvs()
     fun getAllTvAsc():DataSource.Factory<Int,TvEntity> = movieDao.getAllTvsAsc()
